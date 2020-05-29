@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.headline6,
                       )),
                   Text(
-                    "Show More >",
+                    "Show More  >",
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                 ],
