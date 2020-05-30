@@ -7,6 +7,12 @@ import 'package:mystore_project/product/product_comment/index.dart';
 
 class ProductCommentBloc
     extends Bloc<ProductCommentEvent, ProductCommentState> {
+  // static final ProductCommentBloc _productCommentBlocSingleton =
+  //     ProductCommentBloc._internal();
+  // factory ProductCommentBloc() {
+  //   return _productCommentBlocSingleton;
+  // }
+  //ProductCommentBloc._internal();
   var forceRefresh = false;
   var lazyLoad = false;
   var page = 0;

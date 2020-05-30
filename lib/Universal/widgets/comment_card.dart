@@ -7,7 +7,6 @@ class CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white12,
       margin: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 5.0),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 5.0),

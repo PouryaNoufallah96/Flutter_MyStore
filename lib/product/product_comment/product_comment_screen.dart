@@ -5,6 +5,7 @@ import 'package:mystore_project/Universal/widgets/comment_card.dart';
 import 'package:mystore_project/Universal/widgets/customLoading.dart';
 import 'package:mystore_project/product/product_comment/index.dart';
 import 'package:mystore_project/product/product_comment/product_comment_page.dart';
+import 'package:mystore_project/product/product_comment_form/product_comment_form_screen.dart';
 
 class ProductCommentScreen extends StatefulWidget {
   final ProductCommentBloc bloc;
@@ -60,13 +61,14 @@ class ProductCommentScreenState extends State<ProductCommentScreen> {
                                                   "productName")));
                                 },
                                 child: Text(
-                                  "Show more",
+                                  "Read all",
                                   style: Theme.of(context).textTheme.subtitle2,
                                 ),
                               )
                             ],
                           )
                         : Container()),
+                ProductCommentFormScreen(),
                 ListViewEffect(
                     duration: Duration(milliseconds: 100),
                     children: currentState.comments
