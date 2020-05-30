@@ -25,7 +25,7 @@ class CustomInput extends StatelessWidget {
             }
           },
           textInputAction: TextInputAction.go,
-          style: TextStyle(fontSize: 13.0, fontFamily: 'vazir'),
+          style: TextStyle(fontSize: 13.0),
           decoration: new InputDecoration(
               errorStyle: TextStyle(color: accentColor2),
               labelText: placeHolder,
