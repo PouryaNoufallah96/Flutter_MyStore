@@ -6,8 +6,7 @@ import 'package:mystore_project/product/product_comment_form/index.dart';
 
 class ProductCommentFormBloc
     extends Bloc<ProductCommentFormEvent, ProductCommentFormState> {
-  String message, name, email;
-  ProductCommentFormBloc(this.message, this.name, this.email);
+  ProductCommentFormBloc();
   @override
   Future<void> close() async {
     // dispose objects

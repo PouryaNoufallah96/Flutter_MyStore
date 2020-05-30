@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
-  String text;
+  TextEditingController controller;
   final bool isRequired;
   final String placeHolder;
   double borderWidth = 2;
-  CustomInput(this.text, this.isRequired, this.placeHolder);
+  CustomInput(this.controller, this.isRequired, this.placeHolder);
   @override
   Widget build(BuildContext context) {
     var borderRadius2 = BorderRadius.all(Radius.circular(10));
@@ -18,15 +18,11 @@ class CustomInput extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: TextFormField(
-          onSaved: (value) {
-            text = value;
-          },
+          controller: controller,
           validator: (String value) {
-            String validateText = '';
             if (isRequired && value.trim().isEmpty) {
-              validateText = "Please fill this field";
+              return "Please fill this field";
             }
-            return validateText;
           },
           textInputAction: TextInputAction.go,
           style: TextStyle(fontSize: 13.0, fontFamily: 'vazir'),

@@ -14,7 +14,6 @@ class ProductCommentBloc
   // }
   //ProductCommentBloc._internal();
   var forceRefresh = false;
-  var lazyLoad = false;
   var page = 0;
   var isFinished = false;
   List<Comment> mylist = new List();

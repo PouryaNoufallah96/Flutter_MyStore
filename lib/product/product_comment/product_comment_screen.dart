@@ -4,7 +4,6 @@ import 'package:mystore_project/Universal/widgets/ListViewEffect.dart';
 import 'package:mystore_project/Universal/widgets/comment_card.dart';
 import 'package:mystore_project/Universal/widgets/customLoading.dart';
 import 'package:mystore_project/product/product_comment/index.dart';
-import 'package:mystore_project/product/product_comment/product_comment_page.dart';
 import 'package:mystore_project/product/product_comment_form/product_comment_form_screen.dart';
 
 class ProductCommentScreen extends StatefulWidget {
@@ -43,32 +42,30 @@ class ProductCommentScreenState extends State<ProductCommentScreen> {
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.all(10),
-                    child: !widget.bloc.lazyLoad
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                "Comments",
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductCommentPage(
-                                                  "productName")));
-                                },
-                                child: Text(
-                                  "Read all",
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                ),
-                              )
-                            ],
-                          )
-                        : Container()),
-                ProductCommentFormScreen(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Comments",
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (context) {
+                                  return ProductCommentFormScreen(
+                                      currentState.comments);
+                                });
+                          },
+                          child: Text(
+                            "Add comment",
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        )
+                      ],
+                    )),
                 ListViewEffect(
                     duration: Duration(milliseconds: 100),
                     children: currentState.comments
@@ -77,12 +74,13 @@ class ProductCommentScreenState extends State<ProductCommentScreen> {
                 // ListView.builder(
                 //     padding: EdgeInsets.all(10),
                 //     shrinkWrap: true,
+                //     reverse: true,
                 //     physics: NeverScrollableScrollPhysics(),
                 //     scrollDirection: Axis.vertical,
                 //     itemCount: currentState.comments.length,
                 //     itemBuilder: (context, index) {
                 //       return CommentCard(currentState.comments[index]);
-                //     })
+                //     }),
                 loadMore()
               ],
             );

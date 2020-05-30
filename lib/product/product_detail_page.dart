@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:mystore_project/models/product.dart';
 import 'product_comment/index.dart';
 
@@ -30,8 +31,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     super.initState();
 
     productCommentBloc = ProductCommentBloc();
-    productCommentBloc.lazyLoad = false;
-    productCommentBloc.isFinished = true;
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
     _visible = !widget.product.purchased;
@@ -84,6 +83,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         lastStatus = isShrink;
       });
     }
+
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      productCommentBloc.add(LoadProductCommentEvent());
+    } else if (_scrollController.offset <=
+            _scrollController.position.minScrollExtent &&
+        !_scrollController.position.outOfRange) {}
   }
 
   var opacityDuration = Duration(milliseconds: 500);
@@ -233,70 +240,79 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       );
     }
 
-    return Material(
-      child: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            Container(
-              child: SliverAppBar(
-                leading: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: Theme.of(context).accentColor,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-                expandedHeight: 250.0,
-                floating: true,
-                pinned: true,
-                actions: <Widget>[
-                  IconButton(
+    return LiquidPullToRefresh(
+      onRefresh: () async {
+        if (currentProduct.purchased) {
+          productCommentBloc.forceRefresh = true;
+          productCommentBloc.add(LoadProductCommentEvent());
+        }
+      },
+      child: Material(
+        child: NestedScrollView(
+          controller: _scrollController,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              Container(
+                child: SliverAppBar(
+                  leading: IconButton(
                       icon: Icon(
-                        favorite ? Icons.favorite : Icons.favorite_border,
+                        Icons.arrow_back_ios,
                         color: Theme.of(context).accentColor,
                       ),
                       onPressed: () {
-                        setState(() {
-                          favorite = !favorite;
-                        });
-                      })
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: AnimatedOpacity(
-                      opacity: isShrink ? 1.0 : 0.0,
-                      duration: opacityDuration,
-                      child: Text(
-                        currentProduct.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Theme.of(context).accentColor),
-                      )),
-                  background: Hero(
-                    tag: currentProduct.image,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)),
-                        child: Image(
-                          image: NetworkImage(currentProduct.image),
-                          fit: BoxFit.cover,
+                        Navigator.pop(context);
+                      }),
+                  expandedHeight: 250.0,
+                  floating: true,
+                  pinned: true,
+                  actions: <Widget>[
+                    IconButton(
+                        icon: Icon(
+                          favorite ? Icons.favorite : Icons.favorite_border,
+                          color: Theme.of(context).accentColor,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            favorite = !favorite;
+                          });
+                        })
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: AnimatedOpacity(
+                        opacity: isShrink ? 1.0 : 0.0,
+                        duration: opacityDuration,
+                        child: Text(
+                          currentProduct.name,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
                         )),
+                    background: Hero(
+                      tag: currentProduct.image,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          child: Image(
+                            image: NetworkImage(currentProduct.image),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ];
-        },
-        body: ListView(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.all(0),
-          children: <Widget>[
-            Container(child: productInfo()),
-            !_visible ? ProductCommentScreen(productCommentBloc) : Container()
-          ],
+            ];
+          },
+          body: ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.all(0),
+            children: <Widget>[
+              Container(child: productInfo()),
+              !_visible ? ProductCommentScreen(productCommentBloc) : Container()
+            ],
+          ),
         ),
       ),
     );
