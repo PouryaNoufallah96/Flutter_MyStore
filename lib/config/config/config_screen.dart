@@ -95,13 +95,17 @@ class _ConfigScreenState extends State<ConfigScreen> {
                       SizedBox(
                         height: 40,
                       ),
-                      Center(
-                        child: CircleAvatar(
-                          radius: 16,
-                          backgroundImage: NetworkImage(
-                              "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46"),
-                        ),
-                      ),
+                      ConfigBloc().username.isNotEmpty
+                          ? Center(
+                              child: CircleAvatar(
+                                radius: 16,
+                                backgroundImage: NetworkImage(
+                                    "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46"),
+                              ),
+                            )
+                          : Center(
+                              child: Text("Login"),
+                            ),
                       SizedBox(
                         height: 8,
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:mystore_project/models/product.dart';
+import 'package:mystore_project/product/product_comment_form/product_comment_form_screen.dart';
 import 'product_comment/index.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -84,13 +85,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       });
     }
 
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
       productCommentBloc.add(LoadProductCommentEvent());
-    } else if (_scrollController.offset <=
-            _scrollController.position.minScrollExtent &&
-        !_scrollController.position.outOfRange) {}
+    }
   }
 
   var opacityDuration = Duration(milliseconds: 500);
@@ -241,6 +239,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     }
 
     return LiquidPullToRefresh(
+      springAnimationDurationInMilliseconds: 500,
+      height: 100,
       onRefresh: () async {
         if (currentProduct.purchased) {
           productCommentBloc.forceRefresh = true;
@@ -310,7 +310,54 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             padding: EdgeInsets.all(0),
             children: <Widget>[
               Container(child: productInfo()),
-              !_visible ? ProductCommentScreen(productCommentBloc) : Container()
+              if (!_visible)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "Comments",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return SingleChildScrollView(
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height - 15,
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20)),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      ProductCommentFormScreen(),
+                                      ProductCommentScreen(productCommentBloc)
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                      child: Text(
+                        "Add comment",
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    )
+                  ],
+                )
+              else
+                Container()
             ],
           ),
         ),
