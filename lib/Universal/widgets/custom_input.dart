@@ -25,11 +25,14 @@ class CustomInput extends StatelessWidget {
             }
           },
           textInputAction: TextInputAction.go,
-          style: TextStyle(fontSize: 13.0),
+          style: TextStyle(fontSize: 12.0),
+          maxLines: null,
+          keyboardType: TextInputType.text,
           decoration: new InputDecoration(
               errorStyle: TextStyle(color: accentColor2),
               labelText: placeHolder,
               border: outlineInputBorder,
+              labelStyle: TextStyle(color: accentColor2),
               focusedErrorBorder: outlineInputBorder,
               errorBorder: outlineInputBorder,
               focusedBorder: outlineInputBorder,

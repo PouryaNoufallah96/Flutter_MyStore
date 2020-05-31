@@ -36,8 +36,7 @@ class ProductCommentScreenState extends State<ProductCommentScreen> {
           if (currentState is UnProductCommentState) {
             return CustomLoading();
           } else if (currentState is InProductCommentState) {
-            return Flex(
-              direction: Axis.vertical,
+            return Column(
               children: <Widget>[
                 ListView.builder(
                     padding: EdgeInsets.all(10),

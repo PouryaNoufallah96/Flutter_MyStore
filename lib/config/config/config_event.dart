@@ -50,6 +50,7 @@ class LoadConfigEvent extends ConfigEvent {
       {ConfigState currentState, ConfigBloc bloc}) async* {
     try {
       yield UnConfigState();
+      bloc.darkModeOn = MyStore.prefs.getBool(MyStore.darkModePref);
       yield InConfigState();
     } catch (_, stackTrace) {
       developer.log('$_',

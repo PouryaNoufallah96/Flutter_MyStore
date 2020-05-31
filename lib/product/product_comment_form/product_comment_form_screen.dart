@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore_project/Universal/widgets/custom_input.dart';
+import 'package:mystore_project/config/config/config_bloc.dart';
 import 'package:mystore_project/models/comment.dart';
 import 'package:mystore_project/product/product_comment_form/index.dart';
 
@@ -19,8 +20,6 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
 
   ProductCommentFormBloc bloc;
   final _formKey = GlobalKey<FormState>();
-  var nameController = TextEditingController();
-  var mailController = TextEditingController();
   var commentController = TextEditingController();
   @override
   void initState() {
@@ -44,18 +43,12 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
             "Enter Your Comment",
             style: Theme.of(context).textTheme.headline6,
           ),
-          SizedBox(
-            height: 50,
-          ),
-          CustomInput(mailController, true, "Email"),
-          CustomInput(nameController, true, "UserName"),
-          CustomInput(commentController, true, "Comment"),
+          CustomInput(commentController, true, ConfigBloc().username),
           SizedBox(
             height: 20,
           ),
           Container(
             width: double.infinity,
-            margin: EdgeInsets.all(15),
             child: MaterialButton(
               color: Theme.of(context).accentColor,
               child: Text("Submit"),
@@ -63,7 +56,7 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
                 if (_formKey.currentState.validate()) {
                   var comment = new Comment(
                       id: 0,
-                      author: nameController.text.toString(),
+                      author: ConfigBloc().username,
                       image:
                           "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46",
                       comment: commentController.text.toString());

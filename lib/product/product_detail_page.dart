@@ -14,6 +14,7 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage>
     with TickerProviderStateMixin {
   ScrollController _scrollController;
+  ScrollController _scrollController2;
   bool lastStatus = true;
   ProductCommentBloc productCommentBloc;
   bool favorite = false;
@@ -34,6 +35,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     productCommentBloc = ProductCommentBloc();
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
+    _scrollController2 = new ScrollController();
+    _scrollController2.addListener(_scrollListener2);
     _visible = !widget.product.purchased;
     if (widget.product.purchased)
       productCommentBloc.add(LoadProductCommentEvent());
@@ -51,6 +54,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   void dispose() {
     productCommentBloc.close();
     _scrollController.removeListener(_scrollListener);
+    _scrollController2.removeListener(_scrollListener2);
     super.dispose();
   }
 
@@ -84,9 +88,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         lastStatus = isShrink;
       });
     }
+  }
 
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
+  _scrollListener2() {
+    if (_scrollController2.position.pixels ==
+        _scrollController2.position.maxScrollExtent) {
       productCommentBloc.add(LoadProductCommentEvent());
     }
   }
@@ -321,31 +327,39 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     MaterialButton(
                       onPressed: () {
                         showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
                             isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
                             context: context,
                             builder: (context) {
-                              return SingleChildScrollView(
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height - 15,
-                                  padding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                          .viewInsets
-                                          .bottom),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20)),
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ProductCommentFormScreen(),
-                                      ProductCommentScreen(productCommentBloc)
-                                    ],
-                                  ),
-                                ),
+                              return DraggableScrollableSheet(
+                                initialChildSize: 0.7,
+                                minChildSize: 0.7,
+                                maxChildSize: 1,
+                                builder: (BuildContext context,
+                                    ScrollController scrollController) {
+                                  return Container(
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(top: 30),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[900],
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20)),
+                                    ),
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 25),
+                                      child: ListView(
+                                        shrinkWrap: true,
+                                        controller: scrollController,
+                                        children: <Widget>[
+                                          ProductCommentFormScreen(),
+                                          ProductCommentScreen(
+                                              productCommentBloc)
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             });
                       },
