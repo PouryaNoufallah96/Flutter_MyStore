@@ -29,10 +29,9 @@ class ProductCard extends StatelessWidget {
                 tag: product.image,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: FadeInImage(
+                  child: Image(
                     image: NetworkImage(product.image),
                     fit: BoxFit.cover,
-                    placeholder: NetworkImage("http://randomcolour.com/"),
                   ),
                 )),
             Text('${product.name}',

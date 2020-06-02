@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore_project/Universal/widgets/custom_input.dart';
 import 'package:mystore_project/config/config/config_bloc.dart';
 import 'package:mystore_project/models/comment.dart';
 import 'package:mystore_project/product/product_comment_form/index.dart';
-
 import '../../Universal/widgets/customLoading.dart';
 
 class ProductCommentFormScreen extends StatefulWidget {
-  ProductCommentFormScreen();
+  final ProductCommentFormState currentState;
+  final ProductCommentFormBloc bloc;
+  final List<Comment> comments;
+  ProductCommentFormScreen(this.currentState, this.bloc, this.comments);
   @override
   ProductCommentFormScreenState createState() {
     return ProductCommentFormScreenState();
@@ -18,19 +19,24 @@ class ProductCommentFormScreen extends StatefulWidget {
 class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
   ProductCommentFormScreenState();
 
-  ProductCommentFormBloc bloc;
   final _formKey = GlobalKey<FormState>();
   var commentController = TextEditingController();
-  @override
-  void initState() {
-    bloc = ProductCommentFormBloc();
-    super.initState();
-  }
 
-  @override
-  void dispose() {
-    bloc.close();
-    super.dispose();
+  Widget commentState() {
+    if (widget.currentState is SendingProductCommentFormState) {
+      return CustomLoading();
+    } else if (widget.currentState is SuccessProductCommentFormState) {
+      return Text(
+        "Your comment have sent successfully",
+        style: TextStyle(color: Colors.green),
+      );
+    } else if (widget.currentState is ErrorProductCommentFormState) {
+      return Text(
+        "Error!",
+        style: TextStyle(color: Colors.red),
+      );
+    } else
+      return Container();
   }
 
   @override
@@ -43,15 +49,19 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
             "Enter Your Comment",
             style: Theme.of(context).textTheme.headline6,
           ),
-          CustomInput(commentController, true, ConfigBloc().username),
           SizedBox(
             height: 20,
           ),
+          CustomInput(commentController, true, ConfigBloc().username),
           Container(
+            margin: EdgeInsets.symmetric(horizontal: 20),
             width: double.infinity,
             child: MaterialButton(
               color: Theme.of(context).accentColor,
-              child: Text("Submit"),
+              child: Text(
+                "Send",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   var comment = new Comment(
@@ -60,26 +70,14 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
                       image:
                           "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46",
                       comment: commentController.text.toString());
-                  bloc.add(SendProductCommentFormEvent([], comment));
+                  widget.bloc.add(
+                      SendProductCommentFormEvent(widget.comments, comment));
+                  commentController.text = "";
                 }
               },
             ),
           ),
-          BlocBuilder<ProductCommentFormBloc, ProductCommentFormState>(
-              bloc: bloc,
-              builder: (
-                BuildContext context,
-                ProductCommentFormState currentState,
-              ) {
-                if (currentState is SendingProductCommentFormState) {
-                  return CustomLoading();
-                } else if (currentState is SuccessProductCommentFormState) {
-                  return Text("Success");
-                } else if (currentState is ErrorProductCommentFormState) {
-                  return Text("Error");
-                } else
-                  return Container();
-              }),
+          commentState(),
         ],
       ),
     );

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:mystore_project/models/product.dart';
-import 'package:mystore_project/product/product_comment_form/product_comment_form_screen.dart';
 import 'product_comment/index.dart';
+import 'product_comment_form/index.dart';
 
 class ProductDetailPage extends StatefulWidget {
   @override
@@ -17,6 +18,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   ScrollController _scrollController2;
   bool lastStatus = true;
   ProductCommentBloc productCommentBloc;
+  ProductCommentState productCommentState;
+  ProductCommentFormBloc productCommentFormBloc;
   bool favorite = false;
   AnimationController _animationController;
   double _containerPaddingLeft = 20.0;
@@ -33,6 +36,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     super.initState();
 
     productCommentBloc = ProductCommentBloc();
+    productCommentFormBloc = ProductCommentFormBloc();
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
     _scrollController2 = new ScrollController();
@@ -53,6 +57,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   @override
   void dispose() {
     productCommentBloc.close();
+    productCommentFormBloc.close();
     _scrollController.removeListener(_scrollListener);
     _scrollController2.removeListener(_scrollListener2);
     super.dispose();
@@ -341,23 +346,60 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                     padding: EdgeInsets.all(10),
                                     margin: EdgeInsets.only(top: 30),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).primaryColor,
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20),
                                           topRight: Radius.circular(20)),
                                     ),
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: 25),
-                                      child: ListView(
-                                        shrinkWrap: true,
-                                        controller: scrollController,
-                                        children: <Widget>[
-                                          ProductCommentFormScreen(),
-                                          ProductCommentScreen(
-                                              productCommentBloc)
+                                    child: MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<ProductCommentBloc>(
+                                            create: (context) =>
+                                                productCommentBloc,
+                                          ),
+                                          BlocProvider<ProductCommentFormBloc>(
+                                            create: (BuildContext context) =>
+                                                productCommentFormBloc,
+                                          ),
                                         ],
-                                      ),
-                                    ),
+                                        child: ListView(
+                                          controller: scrollController,
+                                          children: <Widget>[
+                                            BlocBuilder<ProductCommentFormBloc,
+                                                    ProductCommentFormState>(
+                                                bloc: productCommentFormBloc,
+                                                builder: (
+                                                  BuildContext context,
+                                                  ProductCommentFormState
+                                                      currentState,
+                                                ) {
+                                                  return ProductCommentFormScreen(
+                                                      currentState,
+                                                      productCommentFormBloc,
+                                                      productCommentBloc
+                                                          .mylist);
+                                                }),
+                                            SingleChildScrollView(
+                                              controller: _scrollController2,
+                                              child: BlocBuilder<
+                                                      ProductCommentBloc,
+                                                      ProductCommentState>(
+                                                  bloc: productCommentBloc,
+                                                  builder: (
+                                                    BuildContext context,
+                                                    ProductCommentState
+                                                        currentState,
+                                                  ) {
+                                                    productCommentState =
+                                                        currentState;
+                                                    return ProductCommentScreen(
+                                                        currentState,
+                                                        productCommentBloc
+                                                            .isFinished);
+                                                  }),
+                                            ),
+                                          ],
+                                        )),
                                   );
                                 },
                               );
