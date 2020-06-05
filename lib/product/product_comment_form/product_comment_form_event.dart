@@ -24,12 +24,11 @@ class UnProductCommentFormEvent extends ProductCommentFormEvent {
 }
 
 class SendProductCommentFormEvent extends ProductCommentFormEvent {
-  List<Comment> comments;
-  Comment comment;
+  final Comment comment;
   @override
   String toString() => 'SendProductCommentFormEvent';
 
-  SendProductCommentFormEvent(this.comments, this.comment);
+  SendProductCommentFormEvent(this.comment);
 
   @override
   Stream<ProductCommentFormState> applyAsync(
@@ -38,7 +37,7 @@ class SendProductCommentFormEvent extends ProductCommentFormEvent {
     try {
       yield SendingProductCommentFormState();
       await Future.delayed(Duration(seconds: 1));
-      _productCommentFormRepository.sendAsync(this.comment, this.comments);
+      _productCommentFormRepository.sendAsync(this.comment);
       yield SuccessProductCommentFormState();
     } catch (_, stackTrace) {
       developer.log('$_',

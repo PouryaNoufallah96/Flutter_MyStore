@@ -8,8 +8,8 @@ import '../../Universal/widgets/customLoading.dart';
 class ProductCommentFormScreen extends StatefulWidget {
   final ProductCommentFormState currentState;
   final ProductCommentFormBloc bloc;
-  final List<Comment> comments;
-  ProductCommentFormScreen(this.currentState, this.bloc, this.comments);
+
+  ProductCommentFormScreen(this.currentState, this.bloc);
   @override
   ProductCommentFormScreenState createState() {
     return ProductCommentFormScreenState();
@@ -45,10 +45,6 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          Text(
-            "Enter Your Comment",
-            style: Theme.of(context).textTheme.headline6,
-          ),
           SizedBox(
             height: 20,
           ),
@@ -70,8 +66,7 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
                       image:
                           "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46",
                       comment: commentController.text.toString());
-                  widget.bloc.add(
-                      SendProductCommentFormEvent(widget.comments, comment));
+                  widget.bloc.add(SendProductCommentFormEvent(comment));
                   commentController.text = "";
                 }
               },

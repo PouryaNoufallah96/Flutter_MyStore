@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mystore_project/Category/category/category_page.dart';
 import 'package:mystore_project/config/config/index.dart';
 import 'package:mystore_project/home/home/home_page.dart';
 import 'package:mystore_project/Universal/MyScafold.dart';
@@ -26,10 +27,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
   addNavigationRailItems() {
     myItems.add(HomePage());
-    myItems.add(MyScaffold(
-      body: Text("2"),
-      title: "2",
-    ));
+    myItems.add(CategoryPage());
     myItems.add(MyScaffold(
       body: Text("3"),
       title: "3",
@@ -52,13 +50,12 @@ class _ConfigScreenState extends State<ConfigScreen> {
     return BlocProvider(
       create: (context) => configBloc,
       child: BlocBuilder<ConfigBloc, ConfigState>(
+        bloc: configBloc,
         builder: (context, state) {
           return MaterialApp(
             title: 'My Store',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              //* Custom Google Font
-
               primarySwatch:
                   configBloc.darkModeOn ? Colors.purple : Colors.deepPurple,
               primaryColor: configBloc.darkModeOn ? Colors.black : Colors.white,
@@ -95,7 +92,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                       SizedBox(
                         height: 40,
                       ),
-                      ConfigBloc().username.isNotEmpty
+                      configBloc.username.isNotEmpty
                           ? Center(
                               child: CircleAvatar(
                                 radius: 16,

@@ -8,7 +8,7 @@ class ProductCommentFormRepository {
 
   ProductCommentFormRepository();
 
-  void sendAsync(Comment comment, List<Comment> comments) {
-    _productCommentFormProvider.sendAsync(comment, comments);
+  void sendAsync(Comment comment) {
+    _productCommentFormProvider.sendAsync(comment);
   }
 }

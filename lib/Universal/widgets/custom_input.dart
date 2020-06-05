@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
-  TextEditingController controller;
+  final TextEditingController controller;
   final bool isRequired;
   final String placeHolder;
-  double borderWidth = 2;
   CustomInput(this.controller, this.isRequired, this.placeHolder);
   @override
   Widget build(BuildContext context) {
+    double borderWidth = 2;
     var borderRadius2 = BorderRadius.all(Radius.circular(10));
     var accentColor2 = Theme.of(context).accentColor;
     var outlineInputBorder = OutlineInputBorder(

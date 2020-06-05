@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mystore_project/Universal/MyScafold.dart';
 import 'package:mystore_project/home/home/home_products/home_product/home_product_screen.dart';
 import 'package:mystore_project/home/home/home_slider/home_slider/index.dart';
+import 'package:mystore_project/product/product_list/product_list/product_list_page.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,9 +49,17 @@ class _HomePageState extends State<HomePage> {
                         "Recent Products",
                         style: Theme.of(context).textTheme.headline6,
                       )),
-                  Text(
-                    "Show More  >",
-                    style: Theme.of(context).textTheme.subtitle2,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductListPage('')));
+                    },
+                    child: Text(
+                      "Show More  >",
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
                   ),
                 ],
               ),

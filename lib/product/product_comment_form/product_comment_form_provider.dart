@@ -3,8 +3,8 @@ import 'dart:async';
 import '../../models/comment.dart';
 
 class ProductCommentFormProvider {
-  Future<void> sendAsync(Comment comment, List<Comment> comments) async {
+  Future<void> sendAsync(Comment comment) async {
     await Future.delayed(Duration(seconds: 2));
-    comments.add(comment);
+    print("Success");
   }
 }

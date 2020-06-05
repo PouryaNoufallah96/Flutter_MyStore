@@ -23,27 +23,12 @@ class LoadProductCommentEvent extends ProductCommentEvent {
     await Future.delayed(Duration(seconds: 1));
 
     try {
-      if (bloc.forceRefresh) {
-        bloc.mylist = [];
-        bloc.isFinished = false;
-        bloc.page = 0;
-      }
-      if (!bloc.isFinished) {
-        var newComments =
-            await _productCommentRepository.getComments(bloc.page * 20);
-        bloc.mylist.addAll(newComments);
-        bloc.page++;
-        if (newComments.length < 20) {
-          bloc.isFinished = true;
-        }
-        yield InProductCommentState(bloc.mylist);
-      }
+      var comments = await _productCommentRepository.getComments();
+      yield InProductCommentState(comments);
     } catch (_, stackTrace) {
       developer.log('$_',
           name: 'LoadProductCommentEvent', error: _, stackTrace: stackTrace);
       yield ErrorProductCommentState(_?.toString());
-    } finally {
-      bloc.forceRefresh = false;
     }
   }
 }

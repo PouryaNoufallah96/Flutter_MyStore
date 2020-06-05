@@ -7,6 +7,6 @@ class ProductCommentRepository {
 
   ProductCommentRepository();
 
-  Future<List<Comment>> getComments(int skip) async =>
-      await _productCommentProvider.getComments(skip);
+  Future<List<Comment>> getComments() async =>
+      await _productCommentProvider.getComments();
 }
