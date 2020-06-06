@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mystore_project/Category/category/category_page.dart';
+import 'package:mystore_project/archive/archive/archive_page.dart';
 import 'package:mystore_project/config/config/index.dart';
 import 'package:mystore_project/home/home/home_page.dart';
 import 'package:mystore_project/Universal/MyScafold.dart';
@@ -32,6 +33,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
       body: Text("3"),
       title: "3",
     ));
+    myItems.add(ArchivePage());
   }
 
   setupApp() {
@@ -129,6 +131,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
                       icon: Icon(Icons.category),
                       selectedIcon: Icon(Icons.category),
                       label: Text('Category'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.search),
+                      selectedIcon: Icon(Icons.search),
+                      label: Text('Search'),
                     ),
                     NavigationRailDestination(
                       icon: Icon(Icons.archive),

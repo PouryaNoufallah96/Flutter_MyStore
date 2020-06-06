@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore_project/models/product.dart';
+import 'package:mystore_project/utilities/db.dart';
 import 'product_comment/index.dart';
 import 'product_comment_form/index.dart';
 
@@ -8,16 +9,18 @@ class ProductDetailScreen extends StatefulWidget {
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
   final Product product;
-  ProductDetailScreen(this.product);
+  final double tag;
+  ProductDetailScreen(this.product, this.tag);
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen>
     with TickerProviderStateMixin {
   ProductCommentBloc productCommentBloc;
   ProductCommentFormBloc productCommentFormBloc;
+  DB db = new DB();
+  var isliked = false;
   ScrollController _scrollController;
   bool lastStatus = true;
-  bool favorite = false;
   AnimationController _animationController;
   double _containerPaddingLeft = 20.0;
   double _animationValue;
@@ -31,6 +34,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   @override
   void initState() {
     super.initState();
+    initFavorite();
     productCommentBloc = BlocProvider.of<ProductCommentBloc>(context);
     productCommentFormBloc = BlocProvider.of<ProductCommentFormBloc>(context);
     _scrollController = new ScrollController();
@@ -50,6 +54,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     super.dispose();
+  }
+
+  initFavorite() async {
+    var temp = await db.CheckData(widget.product.id);
+    setState(() {
+      isliked = temp;
+    });
+  }
+
+  void onTapFavorite() async {
+    if (isliked) {
+      var del = await db.DeleteProduct(widget.product.id);
+      print("Deleted: ${widget.product.id}");
+      setState(() {
+        isliked = false;
+      });
+    } else {
+      int res = await db.saveProduct(widget.product);
+      print("post saved...");
+      setState(() {
+        isliked = true;
+      });
+    }
   }
 
   bool get isShrink {
@@ -241,14 +268,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               actions: <Widget>[
                 IconButton(
                     icon: Icon(
-                      favorite ? Icons.favorite : Icons.favorite_border,
+                      isliked ? Icons.favorite : Icons.favorite_border,
                       color: Theme.of(context).accentColor,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        favorite = !favorite;
-                      });
-                    })
+                    onPressed: onTapFavorite)
               ],
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
@@ -263,7 +286,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   ),
                 ),
                 background: Hero(
-                  tag: currentProduct.image,
+                  tag: widget.tag,
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10),

@@ -7,7 +7,8 @@ import 'product_comment_form/index.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
-  ProductDetailPage(this.product);
+  final double tag;
+  ProductDetailPage(this.product, this.tag);
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -16,7 +17,7 @@ class ProductDetailPage extends StatelessWidget {
           BlocProvider(create: (context) => ProductCommentFormBloc()),
         ],
         child: Material(
-          child: ProductDetailScreen(product),
+          child: ProductDetailScreen(product, tag),
         ));
   }
 }

@@ -14,4 +14,35 @@ class Product {
       this.favorite,
       this.purchased,
       this.description});
+
+  Map<String, dynamic> toMap() {
+    var map = new Map<String, dynamic>();
+
+    map['id'] = id;
+    map['name'] = name;
+    map['image'] = image;
+    map['price'] = price;
+    map['favorite'] = favorite;
+    map['purchased'] = purchased;
+    map['description'] = description;
+    return map;
+  }
+
+  Product.fromjson(Map json)
+      : id = json['id'],
+        name = json['name'],
+        image = json['image'],
+        price = json['price'],
+        favorite = json['favorite'],
+        purchased = json['purchased'],
+        description = json['description'];
+
+  Product.fromDB(Map json)
+      : id = json['id'],
+        name = json['name'],
+        image = json['image'],
+        price = json['price'],
+        favorite = json['favorite'] == 0 ? false : true,
+        purchased = json['purchased'] == 0 ? false : true,
+        description = json['description'];
 }

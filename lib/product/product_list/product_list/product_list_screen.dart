@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:mystore_project/Universal/widgets/customLoading.dart';
 import 'package:mystore_project/Universal/widgets/product_card.dart';
 import 'package:mystore_project/product/product_list/product_list/index.dart';
@@ -52,41 +53,46 @@ class ProductListScreenState extends State<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductListBloc, ProductListState>(
-        bloc: productListBloc,
-        builder: (
-          BuildContext context,
-          ProductListState currentState,
-        ) {
-          if (currentState is UnProductListState) {
-            return Center(
-              child: CustomLoading(),
-            );
-          } else if (currentState is ErrorProductListState) {
-            return Center(
-              child: Text('Error'),
-            );
-          } else if (currentState is InProductListState) {
-            return ListView(controller: scrollController, children: <Widget>[
-              GridView.builder(
-                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-                itemCount: currentState.mylist.length,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(5.0),
-                itemBuilder: (BuildContext context, index) {
-                  return ProductCard(currentState.mylist[index]);
-                },
-              ),
-              loadMore(),
-            ]);
-          } else
-            return Center(
-              child: CustomLoading(),
-            );
-        });
+    return LiquidPullToRefresh(
+      onRefresh: () async {
+        productListBloc.add(LoadProductListEvent());
+      },
+      child: BlocBuilder<ProductListBloc, ProductListState>(
+          bloc: productListBloc,
+          builder: (
+            BuildContext context,
+            ProductListState currentState,
+          ) {
+            if (currentState is UnProductListState) {
+              return Center(
+                child: CustomLoading(),
+              );
+            } else if (currentState is ErrorProductListState) {
+              return Center(
+                child: Text('Error'),
+              );
+            } else if (currentState is InProductListState) {
+              return ListView(controller: scrollController, children: <Widget>[
+                GridView.builder(
+                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
+                  itemCount: currentState.mylist.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.all(5.0),
+                  itemBuilder: (BuildContext context, index) {
+                    return ProductCard(currentState.mylist[index]);
+                  },
+                ),
+                loadMore(),
+              ]);
+            } else
+              return Center(
+                child: CustomLoading(),
+              );
+          }),
+    );
   }
 }

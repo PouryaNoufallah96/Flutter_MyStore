@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore_project/Universal/widgets/customLoading.dart';
 import 'package:mystore_project/home/home/home_slider/home_slider/index.dart';
 import 'package:mystore_project/product/product_detail_page.dart';
+import 'package:mystore_project/utilities/random.dart';
 
 class HomeSliderScreen extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class HomeSliderScreenState extends State<HomeSliderScreen> {
 
   HomeSliderBloc homeSliderBloc;
   int currentSlider = 0;
+  var tag = MyRandom.getRandom();
   @override
   void initState() {
     super.initState();
@@ -57,7 +59,7 @@ class HomeSliderScreenState extends State<HomeSliderScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ProductDetailPage(
-                            currentState.sliders[currentSlider])));
+                            currentState.sliders[currentSlider], tag)));
               },
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
@@ -88,7 +90,7 @@ class HomeSliderScreenState extends State<HomeSliderScreen> {
   Widget mainSlider(BuildContext context, int index, InHomeSliderState state) {
     var width = MediaQuery.of(context).size.width - 20;
     return Hero(
-      tag: state.sliders[index].image,
+      tag: tag,
       child: Container(
           margin: EdgeInsets.symmetric(horizontal: 2),
           width: width,

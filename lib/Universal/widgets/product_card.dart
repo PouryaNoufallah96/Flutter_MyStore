@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mystore_project/models/product.dart';
 import 'package:mystore_project/product/product_detail_page.dart';
+import 'package:mystore_project/utilities/random.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
   ProductCard(this.product);
   @override
   Widget build(BuildContext context) {
+    var tag = MyRandom.getRandom();
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ProductDetailPage(product)));
+                builder: (context) => ProductDetailPage(product, tag)));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -26,7 +28,7 @@ class ProductCard extends StatelessWidget {
           direction: Axis.vertical,
           children: <Widget>[
             Hero(
-                tag: product.image,
+                tag: tag,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: Image(
