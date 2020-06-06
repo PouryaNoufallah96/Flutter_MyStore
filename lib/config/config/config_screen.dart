@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mystore_project/Category/category/category_page.dart';
+import 'package:mystore_project/archive/archive/archive_bloc.dart';
 import 'package:mystore_project/archive/archive/archive_page.dart';
 import 'package:mystore_project/config/config/index.dart';
 import 'package:mystore_project/home/home/home_page.dart';
@@ -49,8 +50,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => configBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => configBloc),
+        BlocProvider(create: (context) => ArchiveBloc())
+      ],
       child: BlocBuilder<ConfigBloc, ConfigState>(
         bloc: configBloc,
         builder: (context, state) {
@@ -140,7 +144,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                     NavigationRailDestination(
                       icon: Icon(Icons.archive),
                       selectedIcon: Icon(Icons.archive),
-                      label: Text('Saved'),
+                      label: Text('Archived'),
                     ),
                   ],
                 ),

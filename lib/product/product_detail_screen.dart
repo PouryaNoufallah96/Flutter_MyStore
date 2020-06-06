@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mystore_project/archive/archive/archive_bloc.dart';
+import 'package:mystore_project/archive/archive/archive_event.dart';
 import 'package:mystore_project/models/product.dart';
 import 'package:mystore_project/utilities/db.dart';
 import 'product_comment/index.dart';
@@ -77,6 +79,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         isliked = true;
       });
     }
+
+    BlocProvider.of<ArchiveBloc>(context).add(LoadArchiveEvent());
   }
 
   bool get isShrink {

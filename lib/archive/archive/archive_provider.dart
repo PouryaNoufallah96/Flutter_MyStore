@@ -6,7 +6,6 @@ class ArchiveProvider {
   DB db = DB();
   Future<List<Product>> getArchivedAsync() async {
     /// write from keystore/keychain
-    await Future.delayed(Duration(seconds: 2));
     var has = await db.HasData();
     if (has) {
       Iterable temp = await db.getAll();

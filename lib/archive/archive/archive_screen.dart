@@ -7,8 +7,7 @@ import '../../Universal/widgets/customLoading.dart';
 import '../../Universal/widgets/product_card.dart';
 
 class ArchiveScreen extends StatefulWidget {
-  final ArchiveBloc archiveBloc;
-  const ArchiveScreen(this.archiveBloc);
+  const ArchiveScreen();
 
   @override
   ArchiveScreenState createState() {
@@ -21,13 +20,12 @@ class ArchiveScreenState extends State<ArchiveScreen> {
 
   @override
   void initState() {
+    BlocProvider.of<ArchiveBloc>(context).add(LoadArchiveEvent());
     super.initState();
-    widget.archiveBloc.add(LoadArchiveEvent());
   }
 
   @override
   void dispose() {
-    widget.archiveBloc.close();
     super.dispose();
   }
 
@@ -35,43 +33,37 @@ class ArchiveScreenState extends State<ArchiveScreen> {
   Widget build(BuildContext context) {
     return LiquidPullToRefresh(
       onRefresh: () async {
-        widget.archiveBloc.add(LoadArchiveEvent());
+        BlocProvider.of<ArchiveBloc>(context).add(LoadArchiveEvent());
       },
-      child: BlocBuilder<ArchiveBloc, ArchiveState>(
-          bloc: widget.archiveBloc,
-          builder: (
-            BuildContext context,
-            ArchiveState currentState,
-          ) {
-            if (currentState is UnArchiveState) {
-              return Center(
-                child: CustomLoading(),
-              );
-            } else if (currentState is ErrorArchiveState) {
-              return Center(
-                child: Text('Error'),
-              );
-            } else if (currentState is InArchiveState) {
-              return GridView.builder(
-                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-                itemCount: currentState.archives.length,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(5.0),
-                itemBuilder: (BuildContext context, index) {
-                  return ProductCard(currentState.archives[index]);
-                },
-              );
-            } else if (currentState is NoArchiveState) {
-              return Center(child: Text("No Archive Found"));
-            } else
-              return Center(
-                child: CustomLoading(),
-              );
-          }),
+      child: BlocBuilder<ArchiveBloc, ArchiveState>(builder: (
+        BuildContext context,
+        ArchiveState currentState,
+      ) {
+        if (currentState is UnArchiveState) {
+          return Center(
+            child: CustomLoading(),
+          );
+        } else if (currentState is ErrorArchiveState) {
+          return Center(
+            child: Text('Error'),
+          );
+        } else if (currentState is InArchiveState) {
+          return GridView.builder(
+            gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+            itemCount: currentState.archives.length,
+            padding: EdgeInsets.all(5.0),
+            itemBuilder: (BuildContext context, index) {
+              return ProductCard(currentState.archives[index]);
+            },
+          );
+        } else if (currentState is NoArchiveState) {
+          return Center(child: Text("No Archive Found"));
+        } else
+          return Center(
+            child: CustomLoading(),
+          );
+      }),
     );
   }
 }

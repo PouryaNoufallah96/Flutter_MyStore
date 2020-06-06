@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore_project/archive/archive/index.dart';
 
 import '../../Universal/MyScafold.dart';
@@ -14,7 +15,7 @@ class _ArchivePageState extends State<ArchivePage> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      body: ArchiveScreen(ArchiveBloc()),
+      body: ArchiveScreen(),
       title: "Archived",
     );
   }

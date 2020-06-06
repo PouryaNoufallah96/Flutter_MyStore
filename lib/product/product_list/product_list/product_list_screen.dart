@@ -55,6 +55,7 @@ class ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     return LiquidPullToRefresh(
       onRefresh: () async {
+        productListBloc.forceRefresh = true;
         productListBloc.add(LoadProductListEvent());
       },
       child: BlocBuilder<ProductListBloc, ProductListState>(

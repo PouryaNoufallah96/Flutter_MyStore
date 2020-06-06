@@ -29,6 +29,7 @@ class LoadArchiveEvent extends ArchiveEvent {
   Stream<ArchiveState> applyAsync(
       {ArchiveState currentState, ArchiveBloc bloc}) async* {
     try {
+      yield UnArchiveState();
       var archives = await _archiveRepository.getArchivedAsync();
       if (archives == null)
         yield NoArchiveState();
