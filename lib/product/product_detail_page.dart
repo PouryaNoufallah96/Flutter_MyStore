@@ -7,7 +7,7 @@ import 'product_comment_form/index.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
-  final double tag;
+  final String tag;
   ProductDetailPage(this.product, this.tag);
   @override
   Widget build(BuildContext context) {

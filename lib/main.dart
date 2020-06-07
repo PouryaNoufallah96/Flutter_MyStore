@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mystore_project/utilities/mystore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'config/config/config_screen.dart';
+import 'config/config/config_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,5 +15,5 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   MyStore.prefs = await SharedPreferences.getInstance();
-  runApp(ConfigScreen());
+  runApp(ConfigPage());
 }

@@ -12,6 +12,7 @@ class HomeSliderProvider {
     for (int i = 0; i < convertedData.length; i++) {
       var current = convertedData[i];
       sliders.add(new Product(
+          id: current['id'],
           name: current['name'],
           favorite: current['favorite'],
           purchased: current['purchased'],

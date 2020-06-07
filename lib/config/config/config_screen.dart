@@ -2,164 +2,170 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mystore_project/Category/category/category_page.dart';
-import 'package:mystore_project/archive/archive/archive_bloc.dart';
 import 'package:mystore_project/archive/archive/archive_page.dart';
-import 'package:mystore_project/config/config/index.dart';
 import 'package:mystore_project/home/home/home_page.dart';
-import 'package:mystore_project/Universal/MyScafold.dart';
+import 'package:mystore_project/search/search/search_page.dart';
+import 'index.dart';
 
 class ConfigScreen extends StatefulWidget {
-  static const String routeName = "/";
   @override
   _ConfigScreenState createState() => _ConfigScreenState();
 }
 
 class _ConfigScreenState extends State<ConfigScreen> {
-  ConfigBloc configBloc;
   int _selectedIndex = 0;
+
   List<Widget> myItems = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    setupApp();
-    addNavigationRailItems();
-  }
-
   addNavigationRailItems() {
     myItems.add(HomePage());
     myItems.add(CategoryPage());
-    myItems.add(MyScaffold(
-      body: Text("3"),
-      title: "3",
-    ));
+    myItems.add(SearchPage());
     myItems.add(ArchivePage());
   }
 
-  setupApp() {
-    configBloc = ConfigBloc();
-    configBloc.add(LoadConfigEvent());
-  }
-
   @override
-  void dispose() {
-    configBloc.close();
-    super.dispose();
+  void initState() {
+    addNavigationRailItems();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => configBloc),
-        BlocProvider(create: (context) => ArchiveBloc())
-      ],
-      child: BlocBuilder<ConfigBloc, ConfigState>(
-        bloc: configBloc,
-        builder: (context, state) {
-          return MaterialApp(
-            title: 'My Store',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch:
-                  configBloc.darkModeOn ? Colors.purple : Colors.deepPurple,
-              primaryColor: configBloc.darkModeOn ? Colors.black : Colors.white,
-              accentColor: configBloc.darkModeOn
-                  ? Colors.deepPurple
-                  : Colors.deepPurpleAccent,
-              disabledColor: Colors.grey,
-              cardColor: configBloc.darkModeOn ? Colors.black : Colors.white,
-              canvasColor:
-                  configBloc.darkModeOn ? Colors.black : Colors.grey[50],
-              brightness:
-                  configBloc.darkModeOn ? Brightness.dark : Brightness.light,
-              buttonTheme: Theme.of(context).buttonTheme.copyWith(
-                  colorScheme: configBloc.darkModeOn
-                      ? ColorScheme.dark()
-                      : ColorScheme.light()),
-              appBarTheme: AppBarTheme(
-                elevation: 0.0,
-              ),
-            ),
-            home: Row(
-              children: <Widget>[
-                NavigationRail(
-                  groupAlignment: 0,
-                  selectedIndex: _selectedIndex,
-                  onDestinationSelected: (int index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  labelType: NavigationRailLabelType.selected,
-                  leading: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 40,
-                      ),
-                      configBloc.username.isNotEmpty
-                          ? Center(
-                              child: CircleAvatar(
-                                radius: 16,
-                                backgroundImage: NetworkImage(
-                                    "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46"),
-                              ),
-                            )
-                          : Center(
-                              child: Text("Login"),
-                            ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          configBloc.darkModeOn
-                              ? FontAwesomeIcons.solidMoon
-                              : FontAwesomeIcons.moon,
-                          size: 18,
-                        ),
-                        onPressed: () {
-                          configBloc.add(DarkModeEvent(!configBloc.darkModeOn));
-                        },
-                      ),
-                    ],
-                  ),
-                  destinations: [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.home),
-                      selectedIcon: Icon(Icons.home),
-                      label: Text('Home'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.category),
-                      selectedIcon: Icon(Icons.category),
-                      label: Text('Category'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.search),
-                      selectedIcon: Icon(Icons.search),
-                      label: Text('Search'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.archive),
-                      selectedIcon: Icon(Icons.archive),
-                      label: Text('Archived'),
-                    ),
-                  ],
+    return Row(
+      children: <Widget>[
+        NavigationRail(
+          groupAlignment: 0,
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          labelType: NavigationRailLabelType.selected,
+          leading: Column(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  BlocProvider.of<ConfigBloc>(context).darkModeOn
+                      ? FontAwesomeIcons.solidMoon
+                      : FontAwesomeIcons.moon,
+                  size: 18,
                 ),
-                VerticalDivider(thickness: 1, width: 1),
-                Expanded(
-                  child: IndexedStack(
-                    children: myItems,
-                    index: _selectedIndex,
-                  ),
-                )
-              ],
+                onPressed: () {
+                  BlocProvider.of<ConfigBloc>(context).add(DarkModeEvent(
+                      !BlocProvider.of<ConfigBloc>(context).darkModeOn));
+                },
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              BlocProvider.of<ConfigBloc>(context).username.isNotEmpty
+                  ? Center(
+                      child: CircleAvatar(
+                        radius: 16,
+                        backgroundImage: NetworkImage(
+                            "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46"),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  margin: EdgeInsets.only(top: 30),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).backgroundColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20)),
+                                  ),
+                                  child: DefaultTabController(
+                                      length: 2,
+                                      child: Scaffold(
+                                        appBar: PreferredSize(
+                                            preferredSize:
+                                                Size.fromHeight(kToolbarHeight),
+                                            child: Container(
+                                              child: SafeArea(
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                        child: Container()),
+                                                    TabBar(
+                                                      tabs: [
+                                                        Container(
+                                                            child:
+                                                                Text("Login")),
+                                                        Text("Sign Up")
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )),
+                                        body: TabBarView(
+                                          children: [
+                                            ListView(
+                                              children: <Widget>[Text("Login")],
+                                            ),
+                                            Text("Sign Up")
+                                          ],
+                                        ),
+                                      )));
+                            });
+                      },
+                      child: Center(
+                        child: Text("Login"),
+                      ),
+                    ),
+              SizedBox(
+                height: 8,
+              ),
+              BlocProvider.of<ConfigBloc>(context).username.isNotEmpty
+                  ? Center(
+                      child: Text("Logout"),
+                    )
+                  : Container()
+            ],
+          ),
+          destinations: [
+            NavigationRailDestination(
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home),
+              label: Text('Home'),
             ),
-          );
-        },
-      ),
+            NavigationRailDestination(
+              icon: Icon(Icons.category),
+              selectedIcon: Icon(Icons.category),
+              label: Text('Category'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.search),
+              selectedIcon: Icon(Icons.search),
+              label: Text('Search'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.archive),
+              selectedIcon: Icon(Icons.archive),
+              label: Text('Archived'),
+            ),
+          ],
+        ),
+        VerticalDivider(thickness: 1, width: 1),
+        Expanded(
+          child: IndexedStack(
+            children: myItems,
+            index: _selectedIndex,
+          ),
+        )
+      ],
     );
   }
 }

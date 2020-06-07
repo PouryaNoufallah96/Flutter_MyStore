@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:uuid/uuid.dart';
+
 class MyRandom {
-  static double getRandom() {
-    var rand = new Random();
-    return rand.nextDouble();
+  static String getRandom() {
+    var rand = new Uuid().v4();
+    return rand;
   }
 }
