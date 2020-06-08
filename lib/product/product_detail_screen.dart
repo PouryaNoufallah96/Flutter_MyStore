@@ -341,7 +341,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                             margin: EdgeInsets.only(top: 30),
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
-                                                  .primaryColor,
+                                                  .backgroundColor,
                                               borderRadius: BorderRadius.only(
                                                   topLeft: Radius.circular(20),
                                                   topRight:
@@ -370,6 +370,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                             LoadProductCommentEvent());
                                                       }
                                                     },
+                                                  ),
+                                                  Divider(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                   ProductCommentScreen(
                                                       productCommentBloc),

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mystore_project/Category/category/category_page.dart';
+import 'package:mystore_project/account/login/login/index.dart';
 import 'package:mystore_project/archive/archive/archive_page.dart';
 import 'package:mystore_project/home/home/home_page.dart';
 import 'package:mystore_project/search/search/search_page.dart';
+import 'package:mystore_project/utilities/mystore.dart';
 import 'index.dart';
 
 class ConfigScreen extends StatefulWidget {
@@ -77,11 +79,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
                             backgroundColor: Colors.transparent,
                             context: context,
                             builder: (context) {
+                              var backgroundColor2 =
+                                  Theme.of(context).backgroundColor;
+                              var edgeInsets = EdgeInsets.only(bottom: 10);
                               return Container(
                                   padding: EdgeInsets.symmetric(vertical: 20),
                                   margin: EdgeInsets.only(top: 30),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).backgroundColor,
+                                    color: backgroundColor2,
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(20),
                                         topRight: Radius.circular(20)),
@@ -93,17 +98,28 @@ class _ConfigScreenState extends State<ConfigScreen> {
                                             preferredSize:
                                                 Size.fromHeight(kToolbarHeight),
                                             child: Container(
+                                              color: backgroundColor2,
                                               child: SafeArea(
                                                 child: Column(
                                                   children: <Widget>[
                                                     Expanded(
-                                                        child: Container()),
+                                                        child: Container(
+                                                            color:
+                                                                backgroundColor2)),
                                                     TabBar(
                                                       tabs: [
                                                         Container(
+                                                            margin: edgeInsets,
+                                                            color:
+                                                                backgroundColor2,
                                                             child:
                                                                 Text("Login")),
-                                                        Text("Sign Up")
+                                                        Container(
+                                                            margin: edgeInsets,
+                                                            color:
+                                                                backgroundColor2,
+                                                            child: Text(
+                                                                "Sign Up")),
                                                       ],
                                                     ),
                                                   ],
@@ -112,9 +128,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                                             )),
                                         body: TabBarView(
                                           children: [
-                                            ListView(
-                                              children: <Widget>[Text("Login")],
-                                            ),
+                                            LoginScreen(),
                                             Text("Sign Up")
                                           ],
                                         ),
@@ -122,15 +136,20 @@ class _ConfigScreenState extends State<ConfigScreen> {
                             });
                       },
                       child: Center(
-                        child: Text("Login"),
+                        child: Text("Account"),
                       ),
                     ),
               SizedBox(
                 height: 8,
               ),
               BlocProvider.of<ConfigBloc>(context).username.isNotEmpty
-                  ? Center(
-                      child: Text("Logout"),
+                  ? GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<ConfigBloc>(context).add(LogoutEvent());
+                      },
+                      child: Center(
+                        child: Text("Logout"),
+                      ),
                     )
                   : Container()
             ],

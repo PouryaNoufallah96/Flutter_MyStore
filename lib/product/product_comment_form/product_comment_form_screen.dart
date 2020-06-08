@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore_project/Universal/widgets/custom_input.dart';
 import 'package:mystore_project/config/config/config_bloc.dart';
 import 'package:mystore_project/models/comment.dart';
@@ -48,7 +49,8 @@ class ProductCommentFormScreenState extends State<ProductCommentFormScreen> {
           SizedBox(
             height: 20,
           ),
-          CustomInput(commentController, true, ConfigBloc().username),
+          CustomInput(commentController, true,
+              BlocProvider.of<ConfigBloc>(context).username),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             width: double.infinity,

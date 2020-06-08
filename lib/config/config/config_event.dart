@@ -50,6 +50,29 @@ class LogoutEvent extends ConfigEvent {
     try {
       yield UnConfigState();
       bloc.username = "";
+      bloc.userSet = false;
+      MyStore.prefs.setString(MyStore.userNamePref, "");
+      yield InConfigState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      yield new ErrorConfigState(_?.toString());
+    }
+  }
+}
+
+class LogEvent extends ConfigEvent {
+  final String userName;
+  LogEvent(this.userName);
+  @override
+  String toString() => 'LogEvent';
+
+  @override
+  Stream<ConfigState> applyAsync(
+      {ConfigState currentState, ConfigBloc bloc}) async* {
+    try {
+      yield UnConfigState();
+      bloc.username = userName;
+      bloc.userSet = userName.isNotEmpty;
       MyStore.prefs.setString(MyStore.userNamePref, bloc.username);
       yield InConfigState();
     } catch (_, stackTrace) {
@@ -74,6 +97,7 @@ class LoadConfigEvent extends ConfigEvent {
       darkMode == null ? bloc.darkModeOn = false : bloc.darkModeOn = darkMode;
       var userName = MyStore.prefs.getString(MyStore.userNamePref);
       userName == null ? bloc.username = "" : bloc.username = userName;
+      bloc.userSet = bloc.username.isNotEmpty;
       yield InConfigState();
     } catch (_, stackTrace) {
       developer.log('$_',

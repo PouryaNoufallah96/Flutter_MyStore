@@ -6,6 +6,7 @@ import 'package:mystore_project/config/config/index.dart';
 
 class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
   bool darkModeOn = false;
+  bool userSet = false;
   String username = "";
 
   @override
