@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mystore_project/Category/category/category_page.dart';
 import 'package:mystore_project/account/login/login/index.dart';
+import 'package:mystore_project/account/profile/profile/index.dart';
 import 'package:mystore_project/archive/archive/archive_page.dart';
 import 'package:mystore_project/home/home/home_page.dart';
 import 'package:mystore_project/search/search/search_page.dart';
@@ -65,11 +66,23 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 height: 40,
               ),
               BlocProvider.of<ConfigBloc>(context).username.isNotEmpty
-                  ? Center(
-                      child: CircleAvatar(
-                        radius: 16,
-                        backgroundImage: NetworkImage(
-                            "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46"),
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilePage()));
+                      },
+                      child: Center(
+                        child: Hero(
+                          tag:
+                              "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46",
+                          child: CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(
+                                "https://lh3.googleusercontent.com/-hdBoSkVmD_Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclOcK2iS_dwGuwHbbjE1ahTi49uKQ/photo.jpg?sz=46"),
+                          ),
+                        ),
                       ),
                     )
                   : GestureDetector(
